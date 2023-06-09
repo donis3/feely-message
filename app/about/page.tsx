@@ -3,6 +3,10 @@ import Link from "next/link";
 import React, { ReactNode } from "react";
 import { FaEnvelope, FaGithub } from "react-icons/fa";
 
+export const metadata = {
+	title: "About",
+};
+
 export default function About() {
 	return (
 		<section className="mx-auto mb-10 flex max-w-2xl flex-col gap-y-4">
@@ -87,7 +91,8 @@ export default function About() {
 					for free and deployed with{" "}
 					<LinkItem href={"https://vercel.com/"}>Vercel</LinkItem> free tier.
 					Database and auth provided by{" "}
-					<LinkItem href={"https://cloud.google.com/"}>Google Cloud</LinkItem> and
+					<LinkItem href={"https://cloud.google.com/"}>Google Cloud</LinkItem>{" "}
+					and
 					<LinkItem href={"https://firebase.google.com/"}>
 						Google Firebase
 					</LinkItem>
@@ -102,7 +107,9 @@ export default function About() {
 			<div className="my-4 w-full text-center">
 				<p>
 					By accessing this website, you agree to our{" "}
-					<Link href={"/tos"} className="font-medium text-blue-700 dark:text-blue-500">
+					<Link
+						href={"/tos"}
+						className="font-medium text-blue-700 dark:text-blue-500">
 						Terms of Service
 					</Link>
 					.
@@ -120,7 +127,7 @@ function AboutItem({
 	children: ReactNode;
 }) {
 	return (
-		<div className="rounded-sm bg-white dark:bg-secondary p-4 shadow-sm">
+		<div className="rounded-sm bg-white p-4 shadow-sm dark:bg-secondary">
 			<h2 className="font-rubik text-lg font-semibold">{header}</h2>
 			<div className="mt-2 py-2 text-base font-normal">{children}</div>
 		</div>

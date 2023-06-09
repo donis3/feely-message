@@ -11,7 +11,10 @@ const raleway = Raleway({ subsets: ["latin-ext"], variable: "--font-raleway" });
 const rubik = Rubik({ subsets: ["latin-ext"], variable: "--font-rubik" });
 
 export const metadata = {
-	title: "Feely Message - messages for special days!",
+	title: {
+		template: "Feely Message - %s",
+		default: "Feely Message - Messages for special days!", // a default is required when creating a template
+	},
 	description:
 		"Browse many messages for any special occasion to share with your friends and loved ones. " +
 		"You may also share your own messages with the world!",

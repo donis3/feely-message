@@ -4,6 +4,7 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,6 +40,26 @@ const getUserData = async (uid: string) => {
 	};
 	return result;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	let userId = params?.uid && params.uid.length > 0 ? params.uid[0] : null;
+	if (!userId || userId.length === 0) {
+		return { title: "Profile Page" };
+	}
+
+	let userData: UserData;
+	try {
+		userData = await getUserData(userId);
+	} catch (error) {
+		return {};
+	}
+
+	//Fetch user data
+	return {
+		title: `${userData.name}`,
+		description: `Browse all feely messages shared by ${userData.name}.`,
+	};
+}
 
 export default async function ProfilePage({ params, searchParams }: Props) {
 	//Get requested user id from url. If no uid specified, assume its users own profile
@@ -133,7 +154,9 @@ function Profile({ userData }: { userData: UserData }) {
 function DeleteButton({ className }: { className?: string }) {
 	return (
 		<Link href={"/profile/delete"}>
-			<Button variant={"outline"} className="gap-1 text-sm text-red-700 dark:bg-secondary">
+			<Button
+				variant={"outline"}
+				className="gap-1 text-sm text-red-700 dark:bg-secondary">
 				<FaTrash /> Delete Profile
 			</Button>
 		</Link>

@@ -4,17 +4,33 @@ import Loader from "@/components/Loader";
 import MessageFeed from "@/components/MessageFeed";
 import MsgDialog from "@/components/MsgDialog";
 import { Button } from "@/components/ui/button";
+import { Metadata, ResolvingMetadata } from "next";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import { BiArrowBack } from "react-icons/bi";
 
-type TagProps = {
+type Props = {
 	params: { slug: string[] };
 	searchParams: any;
 };
 
-export default async function Tag({ params, searchParams }: TagProps) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const tag = params.slug?.length > 0 ? params.slug[0].replace("-", " ") : "";
+	if (tag.length == 0) {
+		return {
+			title: "All Messages",
+			description:
+				"Browse all messages and find the best one to share with your friends or loved ones on special days!",
+		};
+	}
+	return {
+		title: `${tag.toLocaleUpperCase()} Messages`,
+		description: `Browse the best messages to share with your loved ones about ${tag.toLocaleUpperCase()} or many other occasions.`,
+	};
+}
+
+export default async function Tag({ params, searchParams }: Props) {
 	const tag = params.slug?.length > 0 ? params.slug[0] : "";
 	const session = await getServerSession(authOptions);
 

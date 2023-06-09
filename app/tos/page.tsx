@@ -7,6 +7,10 @@ import {
 } from "@/components/ui/card";
 import React from "react";
 
+export const metadata = {
+	title: "Terms of Service",
+};
+
 export default function Tos() {
 	return (
 		<Card className="w-full dark:bg-secondary">
@@ -34,10 +38,10 @@ export default function Tos() {
 				</TosItem>
 				<TosItem title="License">
 					<p>
-						Unless otherwise stated, {process.env.NEXT_PUBLIC_APP_AUTHOR} and/or its licensors own the
-						intellectual property rights for all material on{" "}
-						{process.env.NEXT_PUBLIC_APP_NAME}. All intellectual property rights
-						are reserved. You may access this from
+						Unless otherwise stated, {process.env.NEXT_PUBLIC_APP_AUTHOR} and/or
+						its licensors own the intellectual property rights for all material
+						on {process.env.NEXT_PUBLIC_APP_NAME}. All intellectual property
+						rights are reserved. You may access this from
 						{process.env.NEXT_PUBLIC_APP_NAME} for your own personal use
 						subjected to restrictions set in these terms and conditions.
 					</p>
@@ -51,20 +55,24 @@ export default function Tos() {
 						This Agreement shall begin on the date hereof.
 						<br />
 						Parts of this website offer users an opportunity to post and share
-						text content called Messages. {process.env.NEXT_PUBLIC_APP_AUTHOR} does not filter, edit,
-						publish or review Messages before their presence on the website.
-						Messages do not reflect the views and opinions of {process.env.NEXT_PUBLIC_APP_AUTHOR}, its
-						agents, and/or affiliates. Messages reflect the views and opinions
-						of the person who posts their views and opinions. To the extent
-						permitted by applicable laws, {process.env.NEXT_PUBLIC_APP_AUTHOR} shall not be liable for
-						the Messages or any liability, damages, or expenses caused and/or
-						suffered as a result of any use of and/or posting of and/or
-						appearance of the Messages on this website.
+						text content called Messages. {
+							process.env.NEXT_PUBLIC_APP_AUTHOR
+						}{" "}
+						does not filter, edit, publish or review Messages before their
+						presence on the website. Messages do not reflect the views and
+						opinions of {process.env.NEXT_PUBLIC_APP_AUTHOR}, its agents, and/or
+						affiliates. Messages reflect the views and opinions of the person
+						who posts their views and opinions. To the extent permitted by
+						applicable laws, {process.env.NEXT_PUBLIC_APP_AUTHOR} shall not be
+						liable for the Messages or any liability, damages, or expenses
+						caused and/or suffered as a result of any use of and/or posting of
+						and/or appearance of the Messages on this website.
 					</p>
 					<p>
-						{process.env.NEXT_PUBLIC_APP_AUTHOR} reserves the right to monitor all Messages and remove
-						any Messages that can be considered inappropriate, offensive, or
-						causes breach of these Terms and Conditions.
+						{process.env.NEXT_PUBLIC_APP_AUTHOR} reserves the right to monitor
+						all Messages and remove any Messages that can be considered
+						inappropriate, offensive, or causes breach of these Terms and
+						Conditions.
 					</p>
 					<TosList
 						title="You warrant and
@@ -81,9 +89,10 @@ export default function Tos() {
 
 					<p>
 						{" "}
-						You hereby grant {process.env.NEXT_PUBLIC_APP_AUTHOR} a non-exclusive license to use,
-						reproduce, edit and authorize others to use, reproduce and edit any
-						of your Messages in any and all forms, formats, or media.
+						You hereby grant {process.env.NEXT_PUBLIC_APP_AUTHOR} a
+						non-exclusive license to use, reproduce, edit and authorize others
+						to use, reproduce and edit any of your Messages in any and all
+						forms, formats, or media.
 					</p>
 				</TosItem>
 
