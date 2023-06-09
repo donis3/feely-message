@@ -133,7 +133,7 @@ function Profile({ userData }: { userData: UserData }) {
 function DeleteButton({ className }: { className?: string }) {
 	return (
 		<Link href={"/profile/delete"}>
-			<Button variant={"outline"} className="gap-1 text-sm text-red-800">
+			<Button variant={"outline"} className="gap-1 text-sm text-red-700 dark:bg-secondary">
 				<FaTrash /> Delete Profile
 			</Button>
 		</Link>

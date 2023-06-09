@@ -81,11 +81,9 @@
 }
 
 html {
-	
 	width: 100%;
 	min-width: min-content;
 	min-height: min-content;
-	
 }
 
 body {
@@ -93,5 +91,4 @@ body {
 	height: 100%;
 	width: 100%;
 	min-width: 500px;
-	
 }

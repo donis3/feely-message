@@ -13,7 +13,7 @@ export default function Footer() {
 					<Link
 						target="_blank"
 						href={process.env.NEXT_PUBLIC_AUTHOR_GITHUB ?? "/"}
-						className="font-medium text-blue-800">
+						className="font-medium text-blue-800 dark:text-purple-400">
 						Deniz Özkan
 					</Link>
 				</p>

@@ -41,7 +41,7 @@ export default function MessageCard({
 	const tags = Array.from(new Set(hashtags));
 
 	return (
-		<div className="h-fit w-full flex-1 break-inside-avoid rounded-lg border bg-white/40 bg-clip-padding p-3 shadow-sm   backdrop-blur-lg backdrop-filter hover:bg-white/75  dark:bg-black/60 dark:text-white">
+		<div className="h-fit w-full flex-1 break-inside-avoid rounded-lg border bg-white/40 bg-clip-padding p-3 shadow-sm   backdrop-blur-lg backdrop-filter hover:bg-white/75  dark:bg-black/60 dark:text-white dark:hover:bg-black/50">
 			<div className="mb-3 flex flex-row items-center gap-x-2">
 				{author && <MessageAvatar author={author} uid={uid} />}
 				<div className="flex flex-1 flex-col justify-start gap-y-0 overflow-hidden">

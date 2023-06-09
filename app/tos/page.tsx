@@ -9,7 +9,7 @@ import React from "react";
 
 export default function Tos() {
 	return (
-		<Card className="w-full md:w-2/3 lg:w-1/2">
+		<Card className="w-full dark:bg-secondary">
 			<CardHeader>
 				<CardTitle className="text-center text-xl font-bold">
 					Terms of Service

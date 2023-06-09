@@ -102,7 +102,7 @@ export default function About() {
 			<div className="my-4 w-full text-center">
 				<p>
 					By accessing this website, you agree to our{" "}
-					<Link href={"/tos"} className="font-medium text-blue-700 ">
+					<Link href={"/tos"} className="font-medium text-blue-700 dark:text-blue-500">
 						Terms of Service
 					</Link>
 					.
@@ -120,7 +120,7 @@ function AboutItem({
 	children: ReactNode;
 }) {
 	return (
-		<div className="rounded-sm bg-white p-4 shadow-sm">
+		<div className="rounded-sm bg-white dark:bg-secondary p-4 shadow-sm">
 			<h2 className="font-rubik text-lg font-semibold">{header}</h2>
 			<div className="mt-2 py-2 text-base font-normal">{children}</div>
 		</div>

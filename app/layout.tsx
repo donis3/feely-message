@@ -11,8 +11,10 @@ const raleway = Raleway({ subsets: ["latin-ext"], variable: "--font-raleway" });
 const rubik = Rubik({ subsets: ["latin-ext"], variable: "--font-rubik" });
 
 export const metadata = {
-	title: "Feely Message",
-	description: "One stop message shop",
+	title: "Feely Message - messages for special days!",
+	description:
+		"Browse many messages for any special occasion to share with your friends and loved ones. " +
+		"You may also share your own messages with the world!",
 };
 
 export default function RootLayout({
@@ -20,12 +22,12 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const isDark = false;
 	//render
 	return (
 		<html
 			lang="en"
-			className={`${raleway.variable} ${rubik.variable} ${isDark && "dark"}`}>
+			className={`${raleway.variable} ${rubik.variable}`}
+			suppressHydrationWarning>
 			<body className="flex min-h-screen min-w-min flex-col justify-between bg-bodylight font-raleway dark:bg-bodydark">
 				<Provider>
 					<Navbar />
