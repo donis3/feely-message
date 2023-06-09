@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { FirestoreAdapter } from "@next-auth/firebase-adapter";
 import { cert } from "firebase-admin/app";
 
-
 const authOptions: NextAuthOptions = {
 	theme: {
 		colorScheme: "auto", // "auto" | "dark" | "light"
@@ -33,9 +32,17 @@ const authOptions: NextAuthOptions = {
 
 		async session({ session, user }) {
 			session.user.uid = user?.id;
+			if (user.id === process.env.ADMIN_UID) {
+				session.user.admin = true;
+			} else {
+				session.user.admin = false;
+			}
 			return session;
 		},
 	},
+	pages: {
+		signIn: '/signin'
+	}
 };
 
 const handler = NextAuth(authOptions);

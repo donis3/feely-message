@@ -62,8 +62,8 @@ export async function GET(
 				const data = { ...doc?.data(), id: doc.id };
 				//Revalidate
 				revalidatePath("/");
-				revalidatePath("/profile");
-				revalidatePath("/tag");
+				revalidatePath("/profile/[[...uid]]");
+				revalidatePath("/tag/[[...slug]]");
 				revalidateTag("messages");
 				return NextResponse.json(data);
 			}
@@ -146,8 +146,8 @@ export async function GET(
 
 		//Revalidate
 		revalidatePath("/");
-		revalidatePath("/profile");
-		revalidatePath("/tag");
+		revalidatePath("/profile/[[...uid]]");
+		revalidatePath("/tag/[[...slug]]");
 		revalidateTag("messages");
 
 		return NextResponse.json(result);
@@ -195,8 +195,19 @@ export async function POST(req: NextRequest) {
 			},
 			createdAt: FieldValue.serverTimestamp() as Timestamp,
 		};
-		if (msg.categories.length < 1)
+		if (msg.categories.length < 1) {
 			return ErrorResponse(400, "You must include at least 1 category.");
+		}
+
+		//Check if user exceeded allowed msg quota
+		const msgCount = await GetUserMessageCount(session.user.uid);
+		if (msgCount >= parseInt(process.env.USER_MESSAGE_LIMIT ?? "0")) {
+			//User can't post any more!
+			return ErrorResponse(
+				400,
+				`You've reached your message limit of  ${process.env.USER_MESSAGE_LIMIT}. You can delete some to make room!`,
+			);
+		}
 
 		//Add to collection and get the new document id
 		const messagesRef = db.collection("messages");
@@ -204,10 +215,13 @@ export async function POST(req: NextRequest) {
 
 		//Revalidate
 		revalidatePath("/");
-		revalidatePath("/profile");
-		revalidatePath("/tag");
+		revalidatePath("/profile/[[...uid]]");
+		revalidatePath("/tag/[[...slug]]");
 		revalidateTag("messages");
-		return NextResponse.json({ message: "success", data: { id: response.id } });
+		return NextResponse.json({
+			message: "success",
+			data: { id: response.id, ...msg },
+		});
 	} catch (error) {
 		return ErrorResponse();
 	}
@@ -244,16 +258,15 @@ export async function PATCH(req: NextRequest) {
 		const doc = await messageRef.get();
 		if (!doc.exists) {
 			return ErrorResponse(404, "Failed to update, message no longer exists.");
-		} else {
-			//A message is found with the given ID. Verify ownership
-			const data = doc?.data();
-			if (!data || !data.ownerId || data.ownerId !== uid) {
-				// Ownership verification failed
-				return ErrorResponse(
-					401,
-					"You don't have permission to update this message",
-				);
-			}
+		}
+		//A message is found with the given ID. Verify ownership
+		const msgData = doc?.data();
+		if (!msgData || !msgData.ownerId || msgData.ownerId !== uid) {
+			// Ownership verification failed
+			return ErrorResponse(
+				401,
+				"You don't have permission to update this message",
+			);
 		}
 
 		// Proceed with the update. Clean the data first
@@ -274,11 +287,12 @@ export async function PATCH(req: NextRequest) {
 		//Revalidate
 		revalidatePath("/");
 		revalidatePath("/profile");
-		revalidatePath("/tag");
+		revalidatePath("/profile/[[...uid]]");
+		revalidatePath("/tag/[[...slug]]");
 		revalidateTag("messages");
 		return NextResponse.json({
 			message: "success",
-			data: cleanData,
+			data: { ...msgData, ...cleanData },
 		});
 	} catch (error) {
 		return ErrorResponse();
@@ -311,14 +325,17 @@ export async function DELETE(
 		const messagesRef = db.collection("messages");
 		const messageRef = messagesRef.doc(messageId);
 
-		//Find the message in question and verify that the current user is the author
+		//Find the message in question and verify that the current user is the author OR USER IS ADMIN
 		const doc = await messageRef.get();
 		if (!doc.exists) {
 			return ErrorResponse(404, "Failed to update, message no longer exists.");
 		} else {
 			//A message is found with the given ID. Verify ownership
 			const data = doc?.data();
-			if (!data || !data.ownerId || data.ownerId !== uid) {
+			if (
+				(!data || !data.ownerId || data.ownerId !== uid) && // User is not the owner
+				session.user.admin !== true // user is not admin
+			) {
 				// Ownership verification failed
 				return ErrorResponse(
 					401,
@@ -333,13 +350,25 @@ export async function DELETE(
 		//Revalidate
 		revalidatePath("/");
 		revalidatePath("/profile");
-		revalidatePath("/tag");
+		revalidatePath("/profile/[[...uid]]");
+		revalidatePath("/tag/[[...slug]]");
 		revalidateTag("messages");
 		return NextResponse.json({
 			message: "success",
 		});
 	} catch (error) {
 		return ErrorResponse();
+	}
+}
+
+async function GetUserMessageCount(uid: string) {
+	if (!validateGoogleUid(uid)) return 0;
+	try {
+		const messageRef = db.collection("messages");
+		const messageSnapshot = await messageRef.where("ownerId", "==", uid).get();
+		return messageSnapshot.size;
+	} catch (error) {
+		return 0;
 	}
 }
 

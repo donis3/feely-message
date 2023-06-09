@@ -4,6 +4,7 @@ import Author from "@/types/Author";
 import MessageCopy from "./MessageCopy";
 import MessageAvatar from "./MessageAvatar";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import MessageDelete from "./MessageDelete";
 
 /**
  * Single Hashtag Component
@@ -27,7 +28,7 @@ export default function MessageCard({
 	author = { name: "Unknown", email: "unknown", picture: undefined },
 	hashtags = [],
 	showControls = false,
-	uid
+	uid,
 }: {
 	msgId: string | undefined;
 	msg: string;
@@ -38,7 +39,6 @@ export default function MessageCard({
 }) {
 	//Get only unique tags
 	const tags = Array.from(new Set(hashtags));
-	
 
 	return (
 		<div className="h-fit w-full flex-1 break-inside-avoid rounded-lg border bg-white/40 bg-clip-padding p-3 shadow-sm   backdrop-blur-lg backdrop-filter hover:bg-white/75  dark:bg-black/60 dark:text-white">
@@ -52,8 +52,9 @@ export default function MessageCard({
 						{author?.email}
 					</p>
 				</div>
-				<div className="">
+				<div className="flex gap-1">
 					<MessageCopy text={msg} />
+					<MessageDelete msgId={msgId} />
 				</div>
 			</div>
 

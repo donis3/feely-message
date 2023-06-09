@@ -20,41 +20,45 @@ type UserData = {
 	name: string;
 	email: string;
 	image: string | undefined;
+	messageCount: number | undefined;
 } | null;
+
+const getUserData = async (uid: string) => {
+	// Users api url
+	const apiUrl = new URL(`${process.env.NEXT_PUBLIC_HOSTNAME}/api/user/${uid}`);
+	const response = await fetch(apiUrl, { next: { revalidate: 600 } }); // Cache for 10 minutes (user info)
+	if (!response.ok) throw new Error("Unable to find user data");
+
+	const data = await response.json();
+
+	const result: UserData = {
+		name: data?.name ?? "",
+		email: data?.email ?? "",
+		image: data?.image ?? null,
+		messageCount: data?.messageCount ?? 0,
+	};
+	return result;
+};
 
 export default async function ProfilePage({ params, searchParams }: Props) {
 	//Get requested user id from url. If no uid specified, assume its users own profile
-	const userId = params?.uid && params.uid.length > 0 ? params.uid[0] : null;
+	let userId = params?.uid && params.uid.length > 0 ? params.uid[0] : null;
 
 	let session;
 	let userData: UserData = null;
 	if (!userId) {
 		session = await getServerSession(authOptions);
 		if (session && session?.user) {
-			userData = {
-				name: session.user?.name ?? "",
-				email: session.user?.email ?? "",
-				image: session.user?.image ?? undefined,
-			};
+			userId = session.user.uid;
 		} else {
 			return notFound();
 		}
-	} else {
-		// Users api url
-		const apiUrl = new URL(
-			`${process.env.NEXT_PUBLIC_HOSTNAME}/api/user/${userId}`,
-		);
-		const response = await fetch(apiUrl, { next: { revalidate: 600 } }); // Cache for 10 minutes (user info)
-		if (response.ok) {
-			const data = await response.json();
-			userData = {
-				name: data?.name ?? "",
-				email: data?.email ?? "",
-				image: data?.image ?? null,
-			};
-		} else {
-			return notFound();
-		}
+	}
+
+	try {
+		userData = await getUserData(userId);
+	} catch (error) {
+		return notFound();
 	}
 
 	return (
@@ -117,6 +121,10 @@ function Profile({ userData }: { userData: UserData }) {
 				)}
 				<h3 className="text-lg font-bold">{userData.name}</h3>
 				<p className="text-base font-normal">{userData.email}</p>
+				<div className="mt-4 flex w-full items-center justify-center gap-2 border-t p-2 text-sm font-light">
+					Shared <span className="font-medium">{userData.messageCount}</span>{" "}
+					messages
+				</div>
 			</CardContent>
 		</Card>
 	);

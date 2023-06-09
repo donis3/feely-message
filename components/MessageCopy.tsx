@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { BiCheck, BiCopy } from "react-icons/bi";
+import { BiCheck, BiCopy, BiTrash } from "react-icons/bi";
 
 export default function MessageCopy({ text }: { text: string }) {
 	"use client";

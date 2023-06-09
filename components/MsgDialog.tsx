@@ -16,7 +16,11 @@ import { useToast } from "./ui/use-toast";
 import { MessageData } from "@/types/Forms";
 import { useRouter } from "next/navigation";
 
-export default function MsgDialog() {
+export default function MsgDialog({
+	initialData,
+}: {
+	initialData?: MessageData;
+}) {
 	const { toast } = useToast();
 	const [open, setOpen] = React.useState(false);
 	const formRef = useRef<HTMLFormElement>();
@@ -59,12 +63,28 @@ export default function MsgDialog() {
 					),
 				});
 				//refresh main page to reload messages
-				route.push("/?time=" + Date.now());
+
+				//If we had initial data, and at least 1 category, just send to /tag/xxx instead of main page. Add ?time to refresh cache
+				if (
+					initialData &&
+					initialData.categories.length > 0 &&
+					result.data.categories &&
+					result.data.categories.length > 0
+				) {
+					return route.push(
+						`/tag/${result.data.categories[0]}/?time=${Date.now()}`,
+					);
+				} else {
+					return route.push("/?time=" + Date.now());
+				}
 			} else {
 				toast({
 					variant: "destructive",
 					title: "Error",
-					description: `Failed to add new message. ${result.message}`,
+					description:
+						result.message.length > 0
+							? result.message
+							: `Failed to add new message.`,
 				});
 			}
 		} catch (error) {
@@ -98,7 +118,7 @@ export default function MsgDialog() {
 						New Message
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="max-w-full md:max-w-xl md:min-h-0 min-h-full min-w-full md:min-w-0">
+				<DialogContent className="min-h-full min-w-full max-w-full md:min-h-0 md:min-w-0 md:max-w-xl">
 					<DialogHeader>
 						<DialogTitle>Create a new message</DialogTitle>
 						<DialogDescription>
@@ -109,7 +129,9 @@ export default function MsgDialog() {
 					<MessageForm
 						handleSubmit={handleSubmit}
 						successCallback={closePanel}
-						formData={{ message: "", categories: "" }}
+						formData={
+							initialData ? initialData : { message: "", categories: "" }
+						}
 						submitId={"msg_form_submit_btn"}
 					/>
 

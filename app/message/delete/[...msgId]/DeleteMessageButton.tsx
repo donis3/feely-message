@@ -38,7 +38,7 @@ export default function DeleteMessageButton({ msgId }: { msgId?: string }) {
 					),
 				});
 				//refresh main page to reload messages
-				route.push("/profile");
+				route.push("/profile?time=" + Date.now());
 			} else {
 				toast({
 					variant: "destructive",

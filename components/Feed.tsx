@@ -23,7 +23,7 @@ async function getData(
 	const targetUrl = new URL(`${apiUrl.origin}${apiUrl.pathname}?${params}`);
 	const options: RequestInit = {
 		next: { tags: ["messages"], revalidate: 60 },
-		cache: author ? "no-cache" : "default",
+		cache: author ? "no-cache" : undefined,
 	};
 
 	try {
@@ -86,7 +86,16 @@ export default async function Feed({
 
 	// No msg case
 	if (response.size === 0) {
-		return <section>There are no messages to display.</section>;
+		return (
+			<div className="w-full space-y-6 overflow-x-clip  py-4 xl:columns-2 xl:gap-6">
+				There are no messages to display.
+				{response.total > 0 && response.pages > 0 && (
+					<div className="">
+						<Pagination page={response.page} pages={response.pages} />
+					</div>
+				)}
+			</div>
+		);
 	}
 
 	// loop messages
@@ -110,6 +119,13 @@ export default async function Feed({
 			{/* Show pagination if needed */}
 			{response.pages > 1 && (
 				<Pagination page={response.page} pages={response.pages} />
+			)}
+			{response.total > 0 && (
+				<div className="w-full p-2 text-center text-sm font-light text-primary/50">
+					There {response.total > 1 ? "are" : "is"}{" "}
+					<span className="font-bold">{response.total}</span> message
+					{response.total > 1 && "s"}
+				</div>
 			)}
 		</>
 	);

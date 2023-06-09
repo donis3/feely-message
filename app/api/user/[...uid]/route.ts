@@ -34,11 +34,15 @@ export async function GET(req: NextRequest, { params }: GetProps) {
 			//Extract document data
 			const data = doc.data();
 
+			//Get message count for user
+			const messageCount = await GetUserMessageCount(uid);
+
 			//Mask the email and only respond with these safe to share user information
 			const response = {
 				name: data?.name,
 				email: maskEmail(data?.email),
 				image: data?.image,
+				messageCount,
 			};
 			return NextResponse.json(response);
 		}
@@ -158,4 +162,15 @@ function ErrorResponse(code?: number, message?: string) {
 function validateGoogleUid(uid: string): boolean {
 	const pattern = /^[a-zA-Z0-9_-]+$/;
 	return pattern.test(uid);
+}
+
+async function GetUserMessageCount(uid: string) {
+	if (!validateGoogleUid(uid)) return 0;
+	try {
+		const messageRef = db.collection("messages");
+		const messageSnapshot = await messageRef.where("ownerId", "==", uid).get();
+		return messageSnapshot.size;
+	} catch (error) {
+		return 0;
+	}
 }
