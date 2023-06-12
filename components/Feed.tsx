@@ -27,53 +27,6 @@ async function getData(
     cache: author ? "no-cache" : undefined,
   };
 
-  // TEST MODe
-  if (process.env.NODE_ENV === "development") {
-    const messageExample: Message = {
-      id: "ABC",
-      author: {
-        email: "test@example.com",
-        name: "Deniz Özkan",
-        picture:
-          "https://s.gravatar.com/avatar/face5bccf51f34bf2b2a9663b93416555a6f2c54cab9394619d6026bd56de49a?s=80&r=g",
-      },
-      categories: ["valentines"],
-      createdAt: null,
-      message: "Hello there",
-      ownerId: "ABC",
-    };
-
-    const response: {
-      page: number;
-      pages: number;
-      size: number;
-      total: number;
-      data: Message[];
-    } = {
-      page: 1,
-      pages: 2,
-      size: 10,
-      total: 20,
-      data: [],
-    };
-
-    for (let i = 0; i < 20; i++) {
-      const x = Math.ceil(Math.random() * 10);
-      if (x % 2 === 0) {
-        response.data.push({
-          ...messageExample,
-          message: `This is an example message with the number ${i}. This one has 2 lines in the message. Its a bit long`,
-        });
-      } else {
-        response.data.push({
-          ...messageExample,
-          message: `This is an example message with the number ${i}`,
-        });
-      }
-    }
-    return response;
-  }
-
   try {
     const res = await fetch(targetUrl, options);
     //await wait(3);
@@ -150,7 +103,7 @@ export default async function Feed({
   return (
     <>
       {/* <div className="w-full space-y-6 overflow-x-clip  py-4 xl:columns-2 xl:gap-6 h-auto "> */}
-      <div className="w-full grid  grid-cols-1 xl:grid-cols-2 gap-3 py-4  ">
+      <div className="grid w-full  grid-cols-1 gap-3 py-4 xl:grid-cols-2  ">
         {response.data.map((item: Message) => {
           return (
             <MessageCard
@@ -179,3 +132,53 @@ export default async function Feed({
     </>
   );
 }
+
+/*
+// TEST MODe
+  if (process.env.NODE_ENV === "development") {
+    const messageExample: Message = {
+      id: "ABC",
+      author: {
+        email: "test@example.com",
+        name: "Deniz Özkan",
+        picture:
+          "https://s.gravatar.com/avatar/face5bccf51f34bf2b2a9663b93416555a6f2c54cab9394619d6026bd56de49a?s=80&r=g",
+      },
+      categories: ["valentines"],
+      createdAt: null,
+      message: "Hello there",
+      ownerId: "ABC",
+    };
+
+    const response: {
+      page: number;
+      pages: number;
+      size: number;
+      total: number;
+      data: Message[];
+    } = {
+      page: 1,
+      pages: 2,
+      size: 10,
+      total: 20,
+      data: [],
+    };
+
+    for (let i = 0; i < 20; i++) {
+      const x = Math.ceil(Math.random() * 10);
+      if (x % 2 === 0) {
+        response.data.push({
+          ...messageExample,
+          message: `This is an example message with the number ${i}. This one has 2 lines in the message. Its a bit long`,
+        });
+      } else {
+        response.data.push({
+          ...messageExample,
+          message: `This is an example message with the number ${i}`,
+        });
+      }
+    }
+    return response;
+  }
+
+  */
